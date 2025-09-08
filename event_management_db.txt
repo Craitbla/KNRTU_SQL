@@ -1,0 +1,487 @@
+CREATE TABLE clients(
+    client_id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    surname TEXT NOT NULL,
+    patronymic TEXT,
+    phone_number VARCHAR(12) NOT NULL CHECK (phone_number LIKE '+7%'),
+    email TEXT NOT NULL
+);
+
+CREATE TABLE venues(
+    venue_id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    address TEXT NOT NULL,
+    capacity INT NOT NULL CHECK (capacity > 0),
+    type TEXT NOT NULL
+);
+
+CREATE TABLE event_organizers(
+    organizer_id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    surname TEXT NOT NULL,
+    patronymic TEXT,
+    phone_number VARCHAR(12) NOT NULL CHECK (phone_number LIKE '+7%'),
+    email TEXT NOT NULL
+);
+
+CREATE TABLE events(
+    event_id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    type TEXT NOT NULL,
+    date DATE NOT NULL DEFAULT CURRENT_DATE,
+    venue_id  int REFERENCES venues,
+    category TEXT NOT NULL,
+    organizer_id  int REFERENCES event_organizers,
+    ticket_price NUMERIC DEFAULT 0 CHECK (ticket_price >= 0)
+);
+
+CREATE TABLE ticket_reservations(
+    reservation_id SERIAL PRIMARY KEY,
+    client_id int REFERENCES clients,
+    event_id  int REFERENCES events,
+    number_of_tickets INT DEFAULT 1 CHECK (number_of_tickets > 0),
+    booking_status TEXT CHECK (booking_status  IN ('подтверждено', 'отменено', 'ожидает подтверждения'))
+);
+
+
+INSERT INTO clients (name, surname, patronymic, phone_number, email)
+VALUES ('Дмитрий', 'Леонидов', 'Викторович', '+79235927503', 'DM_4532@gmail.com');
+INSERT INTO clients (name, surname, patronymic, phone_number, email)
+VALUES ('Анна', 'Иванова', 'Петровна', '+79561234567', 'a_i_moon@gmail.com');
+INSERT INTO clients (name, surname, patronymic, phone_number, email)
+VALUES ('Пётр', 'Сидоров', NULL, '+79123456789', 'P_Sidorov24@mail.ru');
+INSERT INTO clients (name, surname, patronymic, phone_number, email)
+VALUES ('Екатерина', 'Фёдорова', 'Михайловна', '+79011234567', 'ekatttr_f@mail.ru');
+INSERT INTO clients (name, surname, patronymic, phone_number, email)
+VALUES ('Иван', 'Кузнецов', 'Игоревич', '+79261234567', 'IvAn_kuz_876@gmail.com');
+INSERT INTO clients (name, surname, patronymic, phone_number, email)
+VALUES ('Мария', 'Лебедева', NULL, '+79371234567', 'marleb@gmail.com');
+INSERT INTO clients (name, surname, patronymic, phone_number, email)
+VALUES ('Алексей', 'Новиков', 'Дмитриевич', '+79481234567', 'alexey_NEW@mail.ru');
+INSERT INTO clients (name, surname, patronymic, phone_number, email)
+VALUES ('Наталья', 'Морозова', 'Андреевна', '+79185234711', 'tomatio_126!@gmail.com');
+INSERT INTO clients (name, surname, patronymic, phone_number, email)
+VALUES ('Владимир', 'Васильев', 'Сергеевич', '+79352233456', 'v.vasilev@mail.ru');
+INSERT INTO clients (name, surname, patronymic, phone_number, email)
+VALUES ('Ольга', 'Павлова', 'Романовна', '+79213456987', 'paVlovAaa@gmail.com');
+INSERT INTO clients (name, surname, patronymic, phone_number, email)
+VALUES ('Андрей', 'Григорьев', 'Васильевич', '+79025467890', 'nameless_per434@mail.ru');
+INSERT INTO clients (name, surname, patronymic, phone_number, email)
+VALUES ('Алёна', 'Дмитриева', 'Игоревна', '+79518547650', 'alena_Album@mail.ru');
+INSERT INTO clients (name, surname, patronymic, phone_number, email)
+VALUES ('Максим', 'Зайцев', 'Олегович', '+79330987654', 'MAKS_zaia@gmail.com');
+INSERT INTO clients (name, surname, patronymic, phone_number, email)
+VALUES ('Юлия', 'Соколова', 'Леонидовна', '+79217653421', 'yulchik.plova@mail.ru');
+INSERT INTO clients (name, surname, patronymic, phone_number, email)
+VALUES ('Григорий', 'Смирнов', 'Юрьевич', '+79461238811', 'grrrgrrgr4@mail.ru');
+INSERT INTO clients (name, surname, patronymic, phone_number, email)
+VALUES ('Вера', 'Орлова', 'Геннадьевна', '+79543671223', 'calciy_V@gmail.com');
+INSERT INTO clients (name, surname, patronymic, phone_number, email)
+VALUES ('Роман', 'Борисов', 'Артурович', '+79098765432', 'tarelochnik555@mail.ru');
+
+SELECT * FROM clients;
+
+INSERT INTO venues (name, address, capacity, type) VALUES ('ТЮЗ', 'Казань, ул. Островского, 10', 620, 'театр');
+INSERT INTO venues (name, address, capacity, type) VALUES ('Дом дружбы народов', 'Казань, ул. Моисеева, 12', 400, 'конференц-зал');
+INSERT INTO venues (name, address, capacity, type) VALUES ('ТРК "Парк Хаус"', 'Казань, пр. Победы, 141', 1400, 'развлекательный центр');
+INSERT INTO venues (name, address, capacity, type) VALUES ('ТРК "Тандем"', 'Казань, пр. Ибрагимова, 56', 2000, 'развлекательный центр');
+INSERT INTO venues (name, address, capacity, type) VALUES ('Баскет-холл', 'Казань, ул. Спартаковская, 1', 450,'cпортивный комплекс');
+INSERT INTO venues (name, address, capacity, type) VALUES ('Татнефть Арена', 'Казань, пр. Ямашева, 42', 10000, 'cпортивный комплекс');
+INSERT INTO venues (name, address, capacity, type) VALUES ('Центр семьи "Казан"', 'Казань, ул. Сибгата Хакима, 4', 2000, 'развлекательный центр');
+INSERT INTO venues (name, address, capacity, type) VALUES ('Казань Арена', 'Казань, пр. Ямашева, 115а', 25000, 'cпортивный комплекс');
+INSERT INTO venues (name, address, capacity, type) VALUES ('Театр Камала', 'Казань, ул. Татарстан, 1', 760, 'театр');
+INSERT INTO venues (name, address, capacity, type) VALUES ('Эрмитаж-казань', 'Казань, Кремлевская улица, 2', 350, 'музей');
+INSERT INTO venues (name, address, capacity, type) VALUES ('Ак Барс Арена', 'Казань, пр. Хусаина Ямашева, 101', 52000, 'cпортивный комплекс');
+INSERT INTO venues (name, address, capacity, type) VALUES ('Гольф-клуб Казань', 'Казань, ул. Лаврентьева, 1', 500, 'развлекательный центр');
+INSERT INTO venues (name, address, capacity, type) VALUES ('Корстон Казань', 'Казань, ул. Ершова, 1а', 1000, 'развлекательный центр');
+INSERT INTO venues (name, address, capacity, type) VALUES ('Филармония Ю.Нагорное', 'Казань, ул. Павлюхина, 73', 1800, 'концертный зал');
+INSERT INTO venues (name, address, capacity, type) VALUES ('Боулинг-центр "Сфера"', 'Казань, ул. Зинина, 1', 400, 'развлекательный центр');
+INSERT INTO venues (name, address, capacity, type) VALUES ('Универсальный комплекс Универсиады', 'Казань, ул. Сибирский тракт, 1', 8000, 'cпортивный комплекс');
+INSERT INTO venues (name, address, capacity, type) VALUES ('ТРЦ "Южный"', 'Казань, ул. Адоратского, 6', 1100, 'развлекательный центр');
+INSERT INTO venues (name, address, capacity, type) VALUES ('Казанский государственный цирк', 'Казань, ул. Батурина, 1', 1650, 'развлекательный центр');
+
+SELECT * FROM venues;
+
+INSERT INTO event_organizers (name, surname, patronymic, phone_number, email) VALUES ('Севастьян', 'Кедров', 'Филимонович', '+79217658341', 'seva_kedra@gmail.com');
+INSERT INTO event_organizers (name, surname, patronymic, phone_number, email) VALUES ('Анастасия', 'Петрова', 'Сергеевна', '+79012345678', 'bog_tzar43@mail.ru');
+INSERT INTO event_organizers (name, surname, patronymic, phone_number, email) VALUES ('Лукьян', 'Чернозубов', 'Андреевич', '+79265554433', 'lukyan_lucky7@mail.ru');
+INSERT INTO event_organizers (name, surname, patronymic, phone_number, email) VALUES ('Светлана', 'Иванова', 'Алексеевна', '+79234567890', 'dobry_sneakya@mail.ru');
+INSERT INTO event_organizers (name, surname, patronymic, phone_number, email) VALUES ('Дмитрий', 'Кузнецов', 'Николаевич', '+79345678901', 'gryzly_bear@mail.ru');
+INSERT INTO event_organizers (name, surname, patronymic, phone_number, email) VALUES ('Екатерина', 'Морозова', 'Петровна', '+79456789012', 'yakater345@mail.ru');
+INSERT INTO event_organizers (name, surname, patronymic, phone_number, email) VALUES ('Аврора', 'Марципанова', 'Ивановна', '+79553336644', 'sweet_marzipan23@gmail.com');
+INSERT INTO event_organizers (name, surname, patronymic, phone_number, email) VALUES ('Мария', 'Ковалёва', 'Дмитриевна', '+79678901234', 'mariaKoval_ll@mail.ru');
+INSERT INTO event_organizers (name, surname, patronymic, phone_number, email) VALUES ('Руслан', 'Орлов', 'Викторович', '+79001234567', 'rusyaRu@mail.ru');
+INSERT INTO event_organizers (name, surname, patronymic, phone_number, email) VALUES ('Ольга', 'Белова', 'Анатольевна', '+79112233445', 'Belova5532@mail.ru');
+INSERT INTO event_organizers (name, surname, patronymic, phone_number, email) VALUES ('Виктор', 'Чистяков', 'Станиславович', '+79223344556', 'viktor876442542@mail.ru');
+INSERT INTO event_organizers (name, surname, patronymic, phone_number, email) VALUES ('Арина', 'Давыдова', 'Сергеевна', '+79334455667', 'arina_moguchaya@mail.ru');
+INSERT INTO event_organizers (name, surname, patronymic, phone_number, email) VALUES ('Мирабелла', 'Чеботарёва', 'Олеговна', '+79667778855', 'miracle.cheba@gmail.com');
+INSERT INTO event_organizers (name, surname, patronymic, phone_number, email) VALUES ('Тимур', 'Черкасов', 'Андреевич', '+79556677889', 'timuRtiger@mail.ru');
+INSERT INTO event_organizers (name, surname, patronymic, phone_number, email) VALUES ('Яна', 'Замятина', 'Денисовна', '+79667788990', 'PotatoLover@mail.ru');
+INSERT INTO event_organizers (name, surname, patronymic, phone_number, email) VALUES ('Станислав', 'Маслов', 'Анатольевич', '+79778899001', 'stan_mas@mail.ru');
+INSERT INTO event_organizers (name, surname, patronymic, phone_number, email) VALUES ('Наталья', 'Серова', 'Геннадьевна', '+79889990012', 'kalipeapea@mail.ru');
+INSERT INTO event_organizers (name, surname, patronymic, phone_number, email) VALUES ('Евгений', 'Климов', 'Станиславович', '+79990001123', 'zara_baran5@mail.ru');
+INSERT INTO event_organizers (name, surname, patronymic, phone_number, email) VALUES ('Фрол', 'Мякин', 'Петрович', '+79273737373', 'frol_roll@gmail.com');
+
+SELECT * FROM event_organizers;
+
+INSERT INTO events (name, type, date, venue_id, category, organizer_id, ticket_price) VALUES ('Театральная ночь', 'спектакль', '2024-02-25', 1, 'культурное', 3, 300);
+INSERT INTO events (name, type, date, venue_id, category, organizer_id, ticket_price) VALUES ('Научно-популярная лекция', 'лекция', '2025-03-01', 2, 'образовательное', 5, 200);
+INSERT INTO events (name, type, date, venue_id, category, organizer_id, ticket_price) VALUES ('Выступление группы "Казан"', 'концерт', '2024-03-10', 4, 'музыкальное', 8, 1200);
+INSERT INTO events (name, type, date, venue_id, category, organizer_id, ticket_price) VALUES ('Баскетбольный матч', 'соревнование', '2025-03-15', 5, 'спортивное', 7, 1500);
+INSERT INTO events (name, type, date, venue_id, category, organizer_id, ticket_price) VALUES ('Вечер джаза', 'концерт', '2023-04-05', 3, 'музыкальное', 14, 850);
+INSERT INTO events (name, type, date, venue_id, category, organizer_id, ticket_price) VALUES ('Кубок Казани по волейболу', 'соревнование', '2019-04-12', 11, 'спортивное', 6, 760);
+INSERT INTO events (name, type, date, venue_id, category, organizer_id, ticket_price) VALUES ('Выставка "Современное искусство"', 'выставка', '2025-01-20', 10, 'культурное', 2, 550);
+INSERT INTO events (name, type, date, venue_id, category, organizer_id, ticket_price) VALUES ('Национальный фестиваль', 'фестиваль', '2024-05-25', 13, 'культурное', 9, 0);
+INSERT INTO events (name, type, date, venue_id, category, organizer_id, ticket_price) VALUES ('Кубок по футболу', 'соревнование', '2023-06-10', 8, 'спортивное', 1, 1700);
+INSERT INTO events (name, type, date, venue_id, category, organizer_id, ticket_price) VALUES ('Концерт симфонического оркестра', 'концерт', '2020-06-15', 14, 'музыкальное', 15, 900);
+INSERT INTO events (name, type, date, venue_id, category, organizer_id, ticket_price) VALUES ('Танцевальный вечер', 'выступление', '2013-07-05', 3, 'развлекательное', 18, 150);
+INSERT INTO events (name, type, date, venue_id, category, organizer_id, ticket_price) VALUES ('Международный форум', 'конференция', '2015-07-15', 2, 'образовательное', 8, 400);
+INSERT INTO events (name, type, date, venue_id, category, organizer_id, ticket_price) VALUES ('Соревнования по катанию на коньках', 'соревнование', '2016-08-20', 16, 'спортивное', 19, 600);
+INSERT INTO events (name, type, date, venue_id, category, organizer_id, ticket_price) VALUES ('Космическая выставка', 'выставка', '2017-08-25', 10, 'культурное', 6, 250);
+INSERT INTO events (name, type, date, venue_id, category, organizer_id, ticket_price) VALUES ('Рождественский матч', 'соревнование', '2011-12-25', 5, 'спортивное', 14, 470);
+INSERT INTO events (name, type, date, venue_id, category, organizer_id, ticket_price) VALUES ('Ночной кинотеатр', 'кинопоказ', '2024-12-31', 7, 'развлекательное', 11, 700);
+INSERT INTO events (name, type, date, venue_id, category, organizer_id, ticket_price) VALUES ('Новогодний концерт', 'концерт', '2022-12-31', 17, 'музыкальное', 13, 1000);
+
+SELECT * FROM events;
+
+INSERT INTO ticket_reservations (client_id, event_id, number_of_tickets, booking_status) VALUES (12, 2, 3, 'подтверждено');
+INSERT INTO ticket_reservations (client_id, event_id, number_of_tickets, booking_status) VALUES (5, 4, 2, 'подтверждено');
+INSERT INTO ticket_reservations (client_id, event_id, number_of_tickets, booking_status) VALUES (1, 7, 1, 'ожидает подтверждения');
+INSERT INTO ticket_reservations (client_id, event_id, number_of_tickets, booking_status) VALUES (8, 1, 4, 'подтверждено');
+INSERT INTO ticket_reservations (client_id, event_id, number_of_tickets, booking_status) VALUES (11, 5, 3, 'отменено');
+INSERT INTO ticket_reservations (client_id, event_id, number_of_tickets, booking_status) VALUES (7, 10, 2, 'подтверждено');
+INSERT INTO ticket_reservations (client_id, event_id, number_of_tickets, booking_status) VALUES (3, 2, 5, 'ожидает подтверждения');
+INSERT INTO ticket_reservations (client_id, event_id, number_of_tickets, booking_status) VALUES (12, 6, 1, 'отменено');
+INSERT INTO ticket_reservations (client_id, event_id, number_of_tickets, booking_status) VALUES (15, 3, 2, 'подтверждено');
+INSERT INTO ticket_reservations (client_id, event_id, number_of_tickets, booking_status) VALUES (2, 8, 4, 'подтверждено');
+INSERT INTO ticket_reservations (client_id, event_id, number_of_tickets, booking_status) VALUES (15, 7, 3, 'ожидает подтверждения');
+INSERT INTO ticket_reservations (client_id, event_id, number_of_tickets, booking_status) VALUES (4, 9, 1, 'подтверждено');
+INSERT INTO ticket_reservations (client_id, event_id, number_of_tickets, booking_status) VALUES (17, 12, 5, 'отменено');
+INSERT INTO ticket_reservations (client_id, event_id, number_of_tickets, booking_status) VALUES (15, 5, 3, 'подтверждено');
+INSERT INTO ticket_reservations (client_id, event_id, number_of_tickets, booking_status) VALUES (6, 11, 2, 'подтверждено');
+INSERT INTO ticket_reservations (client_id, event_id, number_of_tickets, booking_status) VALUES (10, 4, 4, 'ожидает подтверждения');
+INSERT INTO ticket_reservations (client_id, event_id, number_of_tickets, booking_status) VALUES (13, 3, 1, 'подтверждено');
+INSERT INTO ticket_reservations (client_id, event_id, number_of_tickets, booking_status) VALUES (14, 5, 4, 'отменено');
+INSERT INTO ticket_reservations (client_id, event_id, number_of_tickets, booking_status) VALUES (16, 10, 3, 'подтверждено');
+
+SELECT * FROM ticket_reservations;
+
+SELECT name, surname, patronymic
+FROM clients
+WHERE email LIKE '%gmail.com';
+
+SELECT name
+FROM events
+WHERE Date >= '2024-01-01' AND Date < '2025-01-01';
+
+SELECT DISTINCT type
+FROM events
+WHERE category = 'культурное'
+ORDER BY 1 DESC;
+
+SELECT sum(capacity) as capacity_of_ent_centers
+FROM venues
+WHERE type = 'развлекательный центр';
+
+SELECT
+    SUM(LENGTH(Phone_number) - LENGTH(REPLACE(Phone_number, '5', ''))) AS Count_of_Fives
+FROM
+    Event_organizers;
+
+WITH p_h_events as(
+    SELECT event_id
+    FROM events
+             JOIN venues USING (venue_id)
+    WHERE venues.name = 'ТРК "Парк Хаус"'
+)
+SELECT sum(number_of_tickets) as tickets_to_p_h
+FROM p_h_events JOIN ticket_reservations USING (event_id);
+
+SELECT
+    events.name,
+    events.date
+FROM
+    clients
+        JOIN
+    ticket_reservations USING (client_id)
+        JOIN
+    events USING (event_id)
+WHERE
+        clients.name = 'Григорий'
+  AND clients.surname = 'Смирнов';
+
+SELECT
+    name
+FROM
+    events
+WHERE
+        date < CURRENT_DATE
+ORDER BY
+    date DESC
+LIMIT 1;
+
+SELECT
+    clients.name,
+    clients.surname,
+    SUM(ticket_reservations.number_of_tickets) AS total_tickets
+FROM
+    ticket_reservations
+        JOIN
+    clients USING(client_id)
+GROUP BY
+    clients.client_id, clients.name, clients.surname
+ORDER BY
+    total_tickets DESC
+LIMIT 1;
+
+SELECT email
+FROM clients
+         JOIN ticket_reservations USING (client_id)
+         JOIN events USING (event_id)
+WHERE ticket_reservations.booking_status = 'подтверждено' AND  events.type = 'соревнование' AND events.date < CURRENT_DATE;
+
+SELECT clients.name, clients.surname, clients.patronymic
+FROM clients
+         LEFT JOIN ticket_reservations USING(client_id)
+WHERE ticket_reservations.reservation_id IS NULL
+   OR ticket_reservations.booking_status = 'отменено';
+
+SELECT
+    events.category,
+    sum(ticket_reservations.number_of_tickets) AS sum_of_tickets
+FROM
+    ticket_reservations
+        JOIN
+    events USING (event_id)
+GROUP BY
+    events.category
+ORDER BY sum_of_tickets;
+
+SELECT DISTINCT
+    event_organizers.name, event_organizers.surname
+FROM
+    events
+        JOIN event_organizers USING(organizer_id)
+WHERE
+        events.category = 'культурное'
+EXCEPT
+SELECT DISTINCT
+    event_organizers.name, event_organizers.surname
+FROM
+    events
+        JOIN event_organizers USING(organizer_id)
+WHERE
+        events.category = 'спортивное';
+
+SELECT
+    events.type,
+    SUM(number_of_tickets * events.ticket_price) AS total_revenue
+FROM
+    events
+        JOIN
+    ticket_reservations USING (event_id)
+GROUP BY
+    events.type
+HAVING
+        SUM(number_of_tickets * events.ticket_price) > 3000;
+
+SELECT DISTINCT
+    event_organizers.name,
+    event_organizers.surname
+FROM
+    event_organizers
+        JOIN
+    events USING (organizer_id)
+WHERE
+        events.category = 'музыкальное'
+UNION
+SELECT DISTINCT
+    event_organizers.name,
+    event_organizers.surname
+FROM
+    event_organizers
+        JOIN
+    events USING (organizer_id)
+WHERE
+        events.category = 'развлекательное';
+
+CREATE VIEW v_time_and_venue AS
+SELECT event_id, events.name as event_name, date, venues.name as venue_name, venues.address
+FROM events JOIN venues USING (venue_id)
+WHERE date >= CURRENT_DATE;
+
+SELECT * FROM v_time_and_venue;
+
+CREATE VIEW v_clients_who_present AS
+SELECT client_id, clients.name as client_name, clients.surname as client_surname,
+       clients.patronymic as client_patronymic,events.name as event_name
+FROM events
+         JOIN ticket_reservations USING (event_id)
+         JOIN clients USING (client_id)
+WHERE date < CURRENT_DATE AND ticket_reservations.booking_status = 'подтверждено';
+
+SELECT * FROM v_clients_who_present;
+
+CREATE VIEW v_events_profits AS
+SELECT event_id, events.name as event_name, category, SUM(ticket_price * number_of_tickets) as profit, event_organizers.name as organizer_name,
+       event_organizers.surname as organizer_surname, event_organizers.patronymic as organizer_patronymic, email
+FROM events JOIN event_organizers USING (organizer_id)
+            JOIN ticket_reservations USING (event_id)
+WHERE ticket_reservations.booking_status = 'подтверждено'
+GROUP BY event_id, event_name, category, organizer_name, organizer_surname, organizer_patronymic, email;
+
+SELECT * FROM v_events_profits;
+
+CREATE OR REPLACE FUNCTION fun_calculate_total_booking_cost(f_event_id INT, f_number_of_tickets INT)
+    RETURNS NUMERIC AS $$
+SELECT
+        events.ticket_price * f_number_of_tickets
+FROM
+    events
+WHERE
+        events.event_id = f_event_id;
+$$ LANGUAGE SQL;
+
+SELECT fun_calculate_total_booking_cost(1, 2);
+
+CREATE OR REPLACE FUNCTION fun_get_client_purchases(f_client_id INT)
+    RETURNS TABLE (
+                      event_name TEXT,
+                      number_of_tickets INT,
+                      total_cost NUMERIC
+                  ) AS $$
+BEGIN
+    RETURN QUERY (
+        SELECT
+            e.name AS event_name,
+            tr.number_of_tickets,
+            (e.ticket_price * tr.number_of_tickets) AS total_cost
+        FROM
+            ticket_reservations tr
+                JOIN
+            events e ON tr.event_id = e.event_id
+        WHERE
+                tr.client_id = f_client_id
+          AND tr.booking_status = 'подтверждено'
+    );
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT fun_get_client_purchases(15);
+
+CREATE OR REPLACE FUNCTION fun_calculate_remaining_tickets(f_event_id INT)
+    RETURNS INT AS $$
+DECLARE
+    total_capacity INT;
+    confirmed_tickets INT;
+    remaining_tickets INT;
+BEGIN
+    SELECT capacity INTO total_capacity
+    FROM venues
+             JOIN events ON venues.venue_id = events.venue_id
+    WHERE events.event_id = f_event_id;
+
+    SELECT COALESCE(SUM(number_of_tickets), 0) INTO confirmed_tickets
+    FROM ticket_reservations
+    WHERE event_id = f_event_id
+      AND booking_status = 'подтверждено';
+
+    remaining_tickets := total_capacity - confirmed_tickets;
+
+    RETURN remaining_tickets;
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT fun_calculate_remaining_tickets(5);
+
+-------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION fun_alarm_ticket_reservation_delete()
+    RETURNS TRIGGER AS $$
+BEGIN
+    RAISE NOTICE 'Удаление невозможно';
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ticket_reservation_delete_trigger
+    BEFORE DELETE ON ticket_reservations
+    FOR EACH ROW
+EXECUTE FUNCTION fun_alarm_ticket_reservation_delete();
+
+DELETE FROM ticket_reservations WHERE reservation_id = 1;
+
+
+CREATE OR REPLACE FUNCTION fun_notify_venue_change()
+    RETURNS TRIGGER AS $$
+BEGIN
+    RAISE NOTICE 'Место проведения мероприятия "%" изменилось. Теперь вместо "%" оно проходит в "%".',
+        OLD.name,
+        (SELECT v.name FROM venues v WHERE v.venue_id = OLD.venue_id),
+        (SELECT v.name FROM venues v WHERE v.venue_id = NEW.venue_id);
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER venue_change_trigger
+    BEFORE UPDATE ON events
+    FOR EACH ROW
+EXECUTE FUNCTION fun_notify_venue_change();
+
+UPDATE events
+SET venue_id = 2
+WHERE event_id = 1;
+
+
+CREATE OR REPLACE FUNCTION fun_notify_event_sequence()
+    RETURNS TRIGGER AS $$
+DECLARE
+    current_year INT := EXTRACT(YEAR FROM NEW.date);
+    event_count_year INT;
+    event_count_type INT;
+    event_count_organizer INT;
+    event_count_category INT;
+BEGIN
+    SELECT COUNT(*) INTO event_count_year
+    FROM events
+    WHERE EXTRACT(YEAR FROM date) = current_year;
+
+    SELECT COUNT(*) INTO event_count_type
+    FROM events
+    WHERE EXTRACT(YEAR FROM date) = current_year
+      AND type = NEW.type;
+
+    SELECT COUNT(*) INTO event_count_organizer
+    FROM events
+    WHERE EXTRACT(YEAR FROM date) = current_year
+      AND organizer_id = NEW.organizer_id;
+
+    SELECT COUNT(*) INTO event_count_category
+    FROM events
+    WHERE EXTRACT(YEAR FROM date) = current_year
+      AND category = NEW.category;
+
+    RAISE NOTICE 'Мероприятие "%" (тип: %, категория: %, организатор: %):
+    - Какое в целом это мероприятие за год: %
+    - Какое это по счету за год мероприятие своего типа: %
+    - Какое это по счету за год мероприятие организатора: %
+    - Какое это по счету за год мероприятие своей категории: %',
+        NEW.name, NEW.type, NEW.category, NEW.organizer_id,
+        event_count_year, event_count_type, event_count_organizer, event_count_category;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER event_sequence_trigger
+    AFTER INSERT ON events
+    FOR EACH ROW
+EXECUTE FUNCTION fun_notify_event_sequence();
+
+INSERT INTO events (name, type, date, venue_id, category, organizer_id, ticket_price)
+VALUES ('Выставка "Народное творчество"', 'выставка', '2023-03-25', 2, 'культурное', 14, 500);
+
+
+
+
